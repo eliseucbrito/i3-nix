@@ -11,26 +11,19 @@
     zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
-  outputs = { self, nixpkgs, home-manager, stylix, hyprlux, zen-browser, ... }@inputs: {
+  outputs = { self, nixpkgs, stylix, zen-browser, ... }@inputs: {
     # Configuração do Sistema
     nixosConfigurations.default = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
         ./hosts/default/configuration.nix
         inputs.stylix.nixosModules.stylix
+        inputs.home-manager.nixosModules.default
 
         ({ pkgs, ... }: {
           environment.systemPackages = [
-            zen-browser.packages.x86_64-linux.default
           ];
         })
-      ];
-    };
-
-    homeConfigurations.ecb = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [
-        ./home.nix
       ];
     };
   };
